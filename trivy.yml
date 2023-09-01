@@ -1,0 +1,15 @@
+timeout: 10m
+dependency-tree: true
+list-all-pkgs: true
+exit-code: 1
+severity:
+  - HIGH
+  - CRITICAL
+scan:
+  skip-dirs:
+    - /test
+vulnerability:
+  type:
+    - os
+    - library
+  ignore-unfixed: true

@@ -36,8 +36,10 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with:
           # image-ref: 'ghcr.io/${{ github.repository }}/node:latest'
+          scan-type: "fs"
           scan-ref: "./images/node/Dockerfile"
           exit-code: "1" # O fluxo de trabalho falhará se uma vulnerabilidade for encontrada
+          trivy-config: trivy.yaml
       - name: Push Node image
         if: ${{ success() }} # Só faz push se o escaneamento do Trivy for bem-sucedido
         run: docker push ghcr.io/${{ github.repository }}/node:latest
