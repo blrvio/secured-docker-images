@@ -21,6 +21,9 @@ RUN apk update \
 # Mudar para o diretório de trabalho padrão
 WORKDIR /app
 
+RUN npm update
+RUN npm update -g
+
 # Remover permissões desnecessárias de arquivos e diretórios
 RUN chmod -R 755 /app
 
