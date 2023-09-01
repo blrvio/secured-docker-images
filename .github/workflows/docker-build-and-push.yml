@@ -8,38 +8,32 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-    continue-on-error: true # Continue mesmo se uma etapa falhar
+    continue-on-error: true  # Continue mesmo se uma etapa falhar
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
+    - name: Checkout Code
+      uses: actions/checkout@v2
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
 
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Node
-      - name: Build Node image
-        id: docker_build_node
-        uses: docker/build-push-action@v2
-        with:
-          context: ./images/node/
-          tags: ghcr.io/${{ github.repository }}/node:latest
-          push: false # Não fazer push ainda, só construir
-      - name: Run Trivy vulnerability scanner on Node image
-        uses: aquasecurity/trivy-action@master
-        with:
-          # image-ref: 'ghcr.io/${{ github.repository }}/node:latest'
-          scan-type: "fs"
-          scan-ref: "./images/node/Dockerfile"
-          exit-code: "1" # O fluxo de trabalho falhará se uma vulnerabilidade for encontrada
-          trivy-config: trivy.yaml
-      - name: Push Node image
-        if: ${{ success() }} # Só faz push se o escaneamento do Trivy for bem-sucedido
-        run: docker push ghcr.io/${{ github.repository }}/node:latest
+    # Node
+    - name: Build Node image
+      run: docker build -t ghcr.io/${{ github.repository }}/node:latest ./images/node
+
+    - name: Run Trivy vulnerability scanner on Node image
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: 'ghcr.io/${{ github.repository }}/node:latest'
+        exit-code: '1'  # O fluxo de trabalho falhará se uma vulnerabilidade for encontrada
+
+    - name: Push Node image
+      if: ${{ success() }}  # Só faz push se o escaneamento do Trivy for bem-sucedido
+      run: docker push ghcr.io/${{ github.repository }}/node:latest
