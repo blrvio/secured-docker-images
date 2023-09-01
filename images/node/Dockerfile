@@ -15,14 +15,15 @@ RUN apk update \
     && apk add --no-cache \
     curl \
     ca-certificates \
+    && rm -f /usr/local/bin/yarn \
+    && rm -f /usr/local/bin/corepack \
+    && rm -f /usr/local/bin/yarnpkg \
+    && npm update && npm update -g \
     && update-ca-certificates \
     && rm -rf /var/cache/apk/* /tmp/*
 
 # Mudar para o diretório de trabalho padrão
 WORKDIR /app
-
-RUN npm update
-RUN npm update -g
 
 # Remover permissões desnecessárias de arquivos e diretórios
 RUN chmod -R 755 /app
