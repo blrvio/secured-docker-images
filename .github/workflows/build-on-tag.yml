@@ -1,0 +1,42 @@
+name: Build, Scan, and Push Docker Images on Tag
+
+on:
+  push:
+    tags:
+      - '*'  # Executa para qualquer tag
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    continue-on-error: true  # Continue mesmo se uma etapa falhar
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    # Node
+    - name: Build Node image
+      id: docker_build_node
+      uses: docker/build-push-action@v2
+      with:
+        context: ./images/node
+        tags: ghcr.io/${{ github.repository }}/node:${{ github.ref }}
+        push: false
+    - name: Run Trivy vulnerability scanner on Node image
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: 'ghcr.io/${{ github.repository }}/node:${{ github.ref }}'
+        exit-code: '1'
+    - name: Push Node image
+      if: ${{ success() }}
+      run: docker push ghcr.io/${{ github.repository }}/node:${{ github.ref }}
