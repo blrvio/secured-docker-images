@@ -19,6 +19,7 @@ RUN apk update \
     && rm -f /usr/local/bin/corepack \
     && rm -f /usr/local/bin/yarnpkg \
     && npm update && npm update -g \
+    && npm install ansi-regex@6.0.1 got@12.1.0 http-cache-semantics@4.1.1 request@2.88.2 semver@7.5.2 tough-cookie@4.1.3 \
     && update-ca-certificates \
     && rm -rf /var/cache/apk/* /tmp/*
 
