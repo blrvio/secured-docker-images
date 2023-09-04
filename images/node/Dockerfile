@@ -1,9 +1,12 @@
 # Use uma imagem base pequena e segura
 # checkov:skip=CKV_DOCKER_2: Esta imagem é usada como base para outras imagens
-FROM node:14-alpine
+FROM alpine:3
 
 # Meta-informações como mantenedor da imagem
 LABEL maintainer="your-email@example.com"
+
+# Instalar o Node.js e o NPM
+RUN apk add --update nodejs npm
 
 # Crie um grupo e usuário não-root para executar o serviço
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
@@ -15,11 +18,12 @@ RUN apk update \
     && apk add --no-cache \
     curl \
     ca-certificates \
-    && rm -f /usr/local/bin/yarn \
-    && rm -f /usr/local/bin/corepack \
-    && rm -f /usr/local/bin/yarnpkg \
-    && npm update && npm update -g \
-    && npm install ansi-regex@6.0.1 got@12.1.0 http-cache-semantics@4.1.1 request@2.88.2 semver@7.5.2 tough-cookie@4.1.3 \
+    # && rm -f /usr/local/bin/yarn \
+    # && rm -f /usr/local/bin/corepack \
+    # && rm -f /usr/local/bin/yarnpkg \
+    # && npm update && npm update -g \
+    # && npm install ansi-regex@6.0.1 got@12.1.0 http-cache-semantics@4.1.1 request@2.88.2 semver@7.5.2 tough-cookie@4.1.3 \
+    # && npm update --save \
     && update-ca-certificates \
     && rm -rf /var/cache/apk/* /tmp/*
 
