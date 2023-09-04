@@ -5,9 +5,6 @@ FROM ghcr.io/blrvio/secured-docker-images/node:latest
 # Criar um diretório para o usuário não-root
 RUN mkdir -p /home/appuser
 
-# Criar um usuário não-root e dar-lhe a propriedade do diretório
-RUN adduser -D appuser && chown -R appuser:appuser /home/appuser
-
 # Definir o diretório de trabalho no contêiner
 WORKDIR /home/appuser/app
 
@@ -21,7 +18,7 @@ COPY package*.json ./
 RUN yarn install
 
 # Copiar o código da aplicação para o contêiner
-COPY --chown=appuser:appuser . .
+COPY . .
 
 # Definir a variável de ambiente para a porta onde a aplicação será executada
 ENV PORT=3000
@@ -33,4 +30,4 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 CMD curl --fail http://localhost:3000/healthcheck || exit 1
 
 # Comando para rodar a aplicação
-CMD ["npm", "start"]
+CMD ["node", "index.js"]

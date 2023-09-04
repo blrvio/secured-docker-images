@@ -3,8 +3,8 @@
 FROM alpine:3
 
 # Meta-informações como mantenedor da imagem
-LABEL maintainer="your-email@example.com"
-
+LABEL maintainer = "your-email@example.com"
+LABEL org.opencontainers.image.source = "https://github.com/blrvio/secured-docker-images"
 # Instalar o Node.js e o NPM
 RUN apk add --update nodejs npm
 
