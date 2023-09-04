@@ -44,8 +44,13 @@ jobs:
       - name: Make CURL requests to test the app
         run: |
           sleep 5  # give some time for the app to start
-          curl http://localhost:3000/healtcheck
+          status_code=$(curl -o /dev/null -s -w "%{http_code}\n" http://localhost:3000/healthcheck)
+          if [ "$status_code" -ne 200 ]; then
+            echo "Healthcheck failed with status code $status_code"
+            exit 1
+          fi
           # Add more curl commands to test different endpoints
+
       # Envia a imagem para o GitHub Container Registry
       - name: Push Node image
         if: ${{ success() }} # Só faz push se o escaneamento do Trivy for bem-sucedido
