@@ -38,3 +38,31 @@ jobs:
     - name: Push Node image
       if: ${{ success() }}  # Só faz push se o escaneamento do Trivy for bem-sucedido
       run: docker push ghcr.io/${{ github.repository }}/node:latest
+
+    # Python
+    - name: Build Python image
+      run: docker build -t ghcr.io/${{ github.repository }}/python:latest ./images/python
+
+    - name: Run Trivy vulnerability scanner on Python image
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: 'ghcr.io/${{ github.repository }}/python:latest'
+        exit-code: '1'  # O fluxo de trabalho falhará se uma vulnerabilidade for encontrada
+
+    - name: Push Python image
+      if: ${{ success() }}  # Só faz push se o escaneamento do Trivy for bem-sucedido
+      run: docker push ghcr.io/${{ github.repository }}/python:latest
+
+    # Java
+    - name: Build Java image
+      run: docker build -t ghcr.io/${{ github.repository }}/java:latest ./images/java
+
+    - name: Run Trivy vulnerability scanner on Java image
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: 'ghcr.io/${{ github.repository }}/java:latest'
+        exit-code: '1'  # O fluxo de trabalho falhará se uma vulnerabilidade for encontrada
+
+    - name: Push Java image
+      if: ${{ success() }}  # Só faz push se o escaneamento do Trivy for bem-sucedido
+      run: docker push ghcr.io/${{ github.repository }}/java:latest
