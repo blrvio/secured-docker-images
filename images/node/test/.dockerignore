@@ -1,14 +1,5 @@
-terraf/
 # Logs
-logs
 *.log
-npm-debug.log*
-
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
 
 # Diretório de dependências
 node_modules
@@ -19,5 +10,7 @@ node_modules
 # IDE - VSCode
 .vscode
 
-# Outros
-.DS_Store
+# Outros arquivos e diretórios que não devem ser copiados para a imagem Docker
+.git
+README.md
+*.md
