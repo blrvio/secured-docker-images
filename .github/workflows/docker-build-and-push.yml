@@ -8,6 +8,7 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    permissions: write-all
     continue-on-error: true  # Continue mesmo se uma etapa falhar
 
     steps:
